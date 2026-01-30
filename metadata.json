@@ -1,0 +1,8 @@
+{
+  "name": "KIHA Scouting Pro",
+  "description": "Professional NHL scouting platform for KIHA. Manage prospects, track analytics, and generate manual scouting reports.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
