@@ -9,7 +9,6 @@ import { DraftBoard } from './components/DraftBoard';
 import { Analytics } from './components/Analytics';
 
 const App: React.FC = () => {
-  // Defaulting to 'COACH' role to bypass the landing page
   const [userRole] = useState<UserRole>('COACH');
   const [activeView, setActiveView] = useState<View>('dashboard');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -41,10 +40,10 @@ const App: React.FC = () => {
         setSelectedPlayer(null);
       }}
       className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all w-full group ${
-        activeView === view ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:bg-slate-800 hover:text-slate-200'
+        activeView === view ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'text-slate-500 hover:bg-slate-800 hover:text-slate-200'
       }`}
     >
-      <span className="text-lg">{icon}</span>
+      <span className="text-lg opacity-80 group-hover:opacity-100">{icon}</span>
       <span className="font-bold text-[11px] uppercase tracking-widest">{label}</span>
     </button>
   );
@@ -55,11 +54,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-200 overflow-hidden font-sans">
+    <div className="flex h-screen bg-slate-950 text-slate-200 overflow-hidden font-sans selection:bg-blue-500/30">
       {/* Sidebar Navigation */}
       <aside className="w-64 bg-slate-950 border-r border-slate-900 flex flex-col p-6 hidden md:flex z-50">
-        <div className="mb-12 flex items-center space-x-3 group">
-          <div className="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center font-black text-white text-xl shadow-lg shadow-blue-500/20">K</div>
+        <div className="mb-12 flex items-center space-x-3 group cursor-default">
+          <div className="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center font-black text-white text-xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">K</div>
           <div className="flex flex-col">
             <span className="text-xl font-black tracking-tighter text-white uppercase italic leading-none">KIHA</span>
             <span className="text-[8px] font-bold text-slate-600 tracking-[0.3em] uppercase">Scouting Systems</span>
@@ -77,13 +76,13 @@ const App: React.FC = () => {
           <NavItem view="settings" label="Settings" icon="⚙" />
         </nav>
 
-        <div className="mt-auto space-y-6">
-          <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center space-x-3">
-             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-lg border border-slate-700">
+        <div className="mt-auto pt-6 border-t border-slate-900">
+          <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex items-center space-x-3">
+             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-lg border border-slate-700 shadow-inner">
                 {userRole === 'COACH' ? '👔' : '⛸️'}
              </div>
              <div className="min-w-0">
-                <p className="text-[10px] font-black text-white truncate uppercase tracking-tight">Current User</p>
+                <p className="text-[10px] font-black text-white truncate uppercase tracking-tight">Active Session</p>
                 <p className="text-[9px] text-blue-400 font-bold uppercase tracking-widest">{roleLabels[userRole]}</p>
              </div>
           </div>
@@ -91,29 +90,30 @@ const App: React.FC = () => {
       </aside>
 
       {/* Main Container */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-slate-950">
+      <main className="flex-1 flex flex-col overflow-hidden bg-[radial-gradient(circle_at_top_right,_#1e293b_0%,_#020617_100%)]">
         <header className="h-16 border-b border-slate-900 flex items-center justify-between px-8 z-40 bg-slate-950/80 backdrop-blur-xl">
           <div className="relative w-96 group">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-              <svg className="h-4 w-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 text-slate-600 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </span>
             <input 
               type="text" 
-              placeholder="GLOBAL SEARCH..." 
+              placeholder="GLOBAL PROSPECT SEARCH..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-slate-900/50 border border-slate-800 text-slate-200 text-[11px] font-bold tracking-widest rounded-lg pl-10 pr-4 py-2 w-full focus:ring-1 focus:ring-blue-500 outline-none uppercase"
+              className="bg-slate-900/50 border border-slate-800 text-slate-200 text-[11px] font-bold tracking-widest rounded-lg pl-10 pr-4 py-2 w-full focus:ring-1 focus:ring-blue-500 outline-none uppercase transition-all"
             />
           </div>
           <div className="flex items-center space-x-6">
             <div className="hidden lg:flex space-x-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
-               <span>Access Level: {userRole}</span>
-               <span className="text-emerald-500">Live Connection</span>
+               <span className="text-emerald-500">System Live</span>
+               <span>v3.4.0</span>
             </div>
             <div className="h-8 w-[1px] bg-slate-900"></div>
-            <button className="text-slate-500 hover:text-white">
+            <button className="text-slate-500 hover:text-white transition-colors relative">
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full border-2 border-slate-950"></span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
               </svg>
@@ -132,7 +132,7 @@ const App: React.FC = () => {
                 onDelete={deletePlayer}
               />
             ) : (
-              <div className="animate-in fade-in duration-500">
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 {activeView === 'dashboard' && <Dashboard />}
                 {activeView === 'players' && (
                   <div>
@@ -151,15 +151,20 @@ const App: React.FC = () => {
                         />
                       ))}
                     </div>
+                    {filteredPlayers.length === 0 && (
+                      <div className="py-20 text-center border-2 border-dashed border-slate-900 rounded-3xl">
+                        <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No prospects found matching your criteria</p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {activeView === 'draft' && <DraftBoard players={players} onPlayerClick={setSelectedPlayer} />}
                 {activeView === 'analytics' && <Analytics players={players} />}
-                {['reports', 'watchlist', 'video', 'staff', 'settings'].includes(activeView) && (
+                {['reports', 'watchlist', 'video', 'settings'].includes(activeView) && (
                   <div className="flex flex-col items-center justify-center py-32 bg-slate-900/30 rounded-3xl border border-slate-900 border-dashed">
-                    <span className="text-4xl mb-4">⚙️</span>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">{activeView} module initializing</h3>
-                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">KIHA Secure Network Layer - Development in Progress</p>
+                    <span className="text-4xl mb-4 grayscale opacity-50">⚙️</span>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">{activeView} module offline</h3>
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Authorized Technical Personnel Only</p>
                   </div>
                 )}
               </div>
