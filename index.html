@@ -23,13 +23,13 @@
             background: #020617;
         }
         #root:empty::after {
-            content: "INITIALIZING KIHA SECURE NETWORK...";
+            content: "SYSTEM INITIALIZING...";
             font-family: monospace;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: bold;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.3em;
             color: #3b82f6;
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -39,7 +39,6 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     </style>
     <script type="importmap">
 {
@@ -57,6 +56,10 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- Polyfill for process to prevent crash in browser environments -->
+    <script>
+      window.process = { env: { API_KEY: "" } };
+    </script>
     <script type="module" src="index.js"></script>
 </body>
 </html>

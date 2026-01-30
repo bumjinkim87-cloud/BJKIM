@@ -2,15 +2,24 @@
 import { GoogleGenAI } from "@google/genai";
 import { Player } from "../types";
 
-// Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Safe access to environment variables
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || "";
+  } catch {
+    return "";
+  }
+};
 
 /**
  * Generates an AI-powered professional scouting report for a specific player.
- * Uses gemini-3-flash-preview for efficient text summarization.
  */
 export const getAIScoutingSummary = async (player: Player) => {
+  const apiKey = getApiKey();
+  if (!apiKey) return "API Key not configured. AI analysis unavailable.";
+
   try {
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Perform a deep professional scouting analysis for this hockey prospect:
@@ -35,10 +44,11 @@ export const getAIScoutingSummary = async (player: Player) => {
 };
 
 /**
- * Compares multiple players using AI reasoning to highlight competitive advantages.
- * Uses gemini-3-pro-preview for complex reasoning tasks.
+ * Compares multiple players using AI reasoning.
  */
 export const comparePlayersAI = async (players: Player[]) => {
+  const apiKey = getApiKey();
+  if (!apiKey) return "API Key not configured. AI analysis unavailable.";
   if (!players || players.length < 2) return "Please provide at least two players for comparison.";
   
   const playerProfiles = players.map(p => `
@@ -47,6 +57,7 @@ export const comparePlayersAI = async (players: Player[]) => {
   `).join('\n---\n');
 
   try {
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
       contents: `Compare the following elite hockey prospects and provide a scouting head-to-head:
